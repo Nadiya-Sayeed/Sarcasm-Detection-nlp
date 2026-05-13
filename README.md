@@ -1,4 +1,5 @@
 # Sarcasm-Detection-nlp
+
 #Machine Learning project to detect sarcasm using NLP
 #1. IMPORT LIBRARIES
 import pandas as pd
@@ -8,16 +9,14 @@ import re
 import matplotlib.pyplot as plt
 import seaborn as sns
 from wordcloud import WordCloud
-
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
-
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import LinearSVC
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.neural_network import MLPClassifier
-
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
 # LOAD DATASET
 data = []
 with open("C:/dataset/Sarcasm_Headlines_Dataset.json", "r") as f:
@@ -26,6 +25,7 @@ with open("C:/dataset/Sarcasm_Headlines_Dataset.json", "r") as f:
 
 df = pd.DataFrame(data)
 df.head()
+
 #CLEAN TEXT
 def clean_text(text):
     text = text.lower()
@@ -46,6 +46,17 @@ sns.histplot(df[df.is_sarcastic==0]["length"], kde=True, label="Not Sarcastic", 
 plt.legend()
 plt.title("Headline Length Distribution")
 plt.show()
+
+#WordCloud for sarcastic headlines
+text = " ".join(df[df.is_sarcastic==1]["clean"])
+wc = WordCloud(width=1000, height=500, background_color="white").generate(text)
+
+plt.figure(figsize=(10,5))
+plt.imshow(wc)
+plt.axis("off")
+plt.title("WordCloud - Sarcastic Headlines")
+plt.show()
+
 #Most frequent sarcastic words
 from collections import Counter
 
@@ -58,6 +69,17 @@ plt.figure(figsize=(10,6))
 sns.barplot(data=freq_df, x="Count", y="Word")
 plt.title("Most Common Sarcastic Words")
 plt.show()
+
+#WordCloud for non-sarcastic headlines
+text2 = " ".join(df[df.is_sarcastic==0]["clean"])
+wc2 = WordCloud(width=1000, height=500, background_color="white").generate(text2)
+
+plt.figure(figsize=(10,5))
+plt.imshow(wc2)
+plt.axis("off")
+plt.title("WordCloud - Non-Sarcastic Headlines")
+plt.show()
+
 #BEST MODEL CONFUSION MATRIX (SVM)
 cm = confusion_matrix(y_test, svm_pred)
 plt.figure(figsize=(6,4))
